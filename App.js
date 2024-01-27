@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import getPokemons from './methods/getPokemons';
 import Home from './views/Home';
 import Detail from './views/Detail';
+import Team from './views/Team';
 import SearchScreen from './components/SearchScreen';
 import {View, Text, StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -26,6 +27,7 @@ function HomeStack() {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Detail" component={Detail} />
+      <Stack.Screen name="Team" component={Team} />
     </Stack.Navigator>
   );
 }
@@ -45,6 +47,13 @@ function MyTabs() {
                     options={{
                         tabBarIcon: ({color, size}) => (
                             <Icon name="search" color={color} size={size} />
+                        ),
+                    }} />
+        <Tab.Screen name="Team"
+                    component={Team}
+                    options={{
+                        tabBarIcon: ({color, size}) => (
+                            <Icon name="list-outline" color={color} size={size} />
                         ),
                     }} />
         <Tab.Screen name="Settings"
