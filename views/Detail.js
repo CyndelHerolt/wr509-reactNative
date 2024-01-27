@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, StyleSheet, ImageBackground, TouchableOpacity, ScrollView} from 'react-native';
 import baseImage from "../assets/pokeball.png";
 import bgImage from "../assets/pokeballBg.png";
@@ -6,6 +6,9 @@ import SpeciesDetails from '../components/SpeciesDetails';
 import tinycolor from "tinycolor2";
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import addToTeam from '../methods/addToTeam';
+import deleteFromTeam from '../methods/deleteFromTeam';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Detail({route}) {
     const {pokemonData, image, color} = route.params;
@@ -15,18 +18,40 @@ export default function Detail({route}) {
     const species = pokemonData.species.name;
     const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${species}`;
 
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    useEffect(() => {
+        const checkFavoriteStatus = async () => {
+            let favoritePokemons = await AsyncStorage.getItem('favoritePokemons');
+            favoritePokemons = favoritePokemons == null ? [] : JSON.parse(favoritePokemons);
+
+            const isFav = favoritePokemons.some(pokemon => pokemon.id === pokemonData.id);
+            setIsFavorite(isFav);
+        };
+
+        checkFavoriteStatus();
+    }, []);
+
     return (
-        <View style={{flex:1, backgroundColor: color}}>
+        <View style={{flex: 1, backgroundColor: color}}>
             <ImageBackground source={bgImage} style={styles.imageBg}>
                 <View style={styles.btnActions}>
                     <TouchableOpacity style={[styles.btn, {backgroundColor: colorType}]}
                                       onPress={() => navigation.goBack()}>
                         <Icon name="arrow-back" size={20} color="#fff"/>
                     </TouchableOpacity>
-                    {/*todo: ajouter à l'équipe onPress -> localStorage*/}
+
                     <TouchableOpacity style={[styles.btn, {backgroundColor: colorType}]}
-                                      onPress={() => navigation.goBack()}>
-                        <Icon name="heart-outline" size={20} color="#fff"/>
+                                      onPress={() => {
+                                          if (isFavorite) {
+                                              deleteFromTeam(pokemonData.id);
+                                              setIsFavorite(false);
+                                          } else {
+                                              addToTeam(pokemonData, image, color);
+                                              setIsFavorite(true);
+                                          }
+                                      }}>
+                        <Icon name={isFavorite ? "heart" : "heart-outline"} size={20} color="#fff"/>
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.containerHeader]}>
@@ -48,7 +73,7 @@ export default function Detail({route}) {
                 </View>
             </ImageBackground>
             <ScrollView style={[styles.containerBody]}>
-                <SpeciesDetails speciesUrl={speciesUrl} pokemonData={pokemonData} color={color} />
+                <SpeciesDetails speciesUrl={speciesUrl} pokemonData={pokemonData} color={color}/>
             </ScrollView>
         </View>
     );

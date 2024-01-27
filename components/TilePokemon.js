@@ -96,9 +96,7 @@ export default function TilePokemon({pokemon}) {
                         (<Image style={styles.image} source={baseImage}/>)
                     }
                 </View>
-
             </TouchableOpacity>
-
     );
 }
 
