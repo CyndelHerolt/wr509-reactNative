@@ -71,7 +71,7 @@ export default function TilePokemon({pokemon}) {
 
     return (
             <TouchableOpacity
-                style={[styles.container, {backgroundColor: color}]}
+                style={[styles.container, {backgroundColor: color, borderColor: colorType}]}
                 onPress={() => navigation.navigate('Detail', { pokemonData, image: pokemon.image, color })}
             >
                 <ImageBackground source={bgImage} style={styles.imageBg}>
@@ -107,10 +107,11 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
-        marginBottom: 20,
+        marginBottom: 10,
         borderRadius: 10,
         margin: 20,
         color: '#fff',
+        borderWidth: 10,
     },
     imageBg: {
         flex: 1,

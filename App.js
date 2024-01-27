@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import getPokemons from './methods/getPokemons';
 import Home from './views/Home';
 import Detail from './views/Detail';
+import SearchScreen from './components/SearchScreen';
 import {View, Text, StyleSheet} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { PokemonContext } from './PokemonContext';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,8 +33,27 @@ function HomeStack() {
 function MyTabs() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Pokedex" component={HomeStack} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Pokedex"
+                  component={HomeStack}
+                  options={{
+                      tabBarIcon: ({color, size}) => (
+                          <Icon name="home" color={color} size={size} />
+                      ),
+                  }} />
+        <Tab.Screen name="Search"
+                    component={SearchScreen}
+                    options={{
+                        tabBarIcon: ({color, size}) => (
+                            <Icon name="search" color={color} size={size} />
+                        ),
+                    }} />
+        <Tab.Screen name="Settings"
+                    component={SettingsScreen}
+                    options={{
+                        tabBarIcon: ({color, size}) => (
+                            <Icon name="cog-outline" color={color} size={size} />
+                        ),
+                    }} />
     </Tab.Navigator>
   );
 }
