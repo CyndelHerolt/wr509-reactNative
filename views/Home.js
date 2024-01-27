@@ -12,25 +12,29 @@ export default function Home({showSearch = false}) {
     pokemon.name.toLowerCase().includes(searchValue.toLowerCase())
   );
 
-  return (
-    <View style={styles.app}>
-        {showSearch && (
-            <TextInput
-                style={styles.searchBar}
-                placeholder="Search..."
-                onChangeText={text => setSearchValue(text)}
-                value={searchValue}
-            />
-        )}
-        <FlatList
-        data={filteredData}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item}) => <TilePokemon pokemon={item} />}
-        onEndReached={loadMorePokemons}
-        onEndReachedThreshold={0.5}
-      />
-    </View>
-  );
+    return (
+        <View style={styles.app}>
+            {showSearch && (
+                <TextInput
+                    style={styles.searchBar}
+                    placeholder="Search..."
+                    onChangeText={text => setSearchValue(text)}
+                    value={searchValue}
+                />
+            )}
+            {filteredData.length === 0 && searchValue !== '' ? (
+                <Text style={styles.error}>There isn't any Pokemon with this name !</Text>
+            ) : (
+                <FlatList
+                    data={filteredData}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({item}) => <TilePokemon pokemon={item} />}
+                    onEndReached={loadMorePokemons}
+                    onEndReachedThreshold={0.5}
+                />
+            )}
+        </View>
+    );
 }
 
 const styles = {
@@ -41,5 +45,9 @@ const styles = {
         borderWidth: .3,
         borderColor: '#b9b9b9',
         borderRadius: 10,
+    },
+    error: {
+        textAlign: 'center',
+        color: 'red',
     },
 }

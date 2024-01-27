@@ -31,6 +31,3 @@ export default function Team() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-});
