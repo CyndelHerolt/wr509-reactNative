@@ -5,6 +5,7 @@ import {TouchableOpacity, View} from "react-native";
 import baseImage from "../assets/pokeball.png";
 import bgImage from "../assets/pokeballBg.png";
 import tinycolor from 'tinycolor2';
+import { useNavigation } from '@react-navigation/native';
 
 function getColorByType(type) {
 
@@ -50,6 +51,7 @@ function getColorByType(type) {
 
 export default function TilePokemon({pokemon}) {
     const [pokemonData, setPokemonData] = useState(null);
+    const navigation = useNavigation();
 
     useEffect(() => {
         fetch(pokemon.url)
@@ -68,7 +70,10 @@ export default function TilePokemon({pokemon}) {
 
 
     return (
-            <TouchableOpacity style={[styles.container, {backgroundColor: color}]}>
+            <TouchableOpacity
+                style={[styles.container, {backgroundColor: color}]}
+                onPress={() => navigation.navigate('Detail', { pokemonData, image: pokemon.image, color })}
+            >
                 <ImageBackground source={bgImage} style={styles.imageBg}>
 
                 </ImageBackground>
