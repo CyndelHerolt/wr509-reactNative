@@ -91,12 +91,10 @@ export default function TilePokemon({pokemon}) {
                     </View>
                 </View>
                 <View style={styles.containerImage}>
-                    {/*<ImageBackground source={bgImage} style={styles.imageBg}>*/}
                     {pokemon.image ?
                         (<Image style={styles.image} source={{uri: pokemon.image}}/>) :
                         (<Image style={styles.image} source={baseImage}/>)
                     }
-                    {/*</ImageBackground>*/}
                 </View>
 
             </TouchableOpacity>

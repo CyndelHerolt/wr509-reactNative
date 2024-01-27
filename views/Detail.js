@@ -15,11 +15,6 @@ export default function Detail({route}) {
     const species = pokemonData.species.name;
     const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${species}`;
 
-    const sprites = Object.values(pokemonData.sprites).filter(sprite => sprite);
-    const spritesNames = Object.keys(pokemonData.sprites).filter(sprite => sprite);
-
-    console.log(pokemonData.species);
-
     return (
         <View style={{flex:1, backgroundColor: color}}>
             <ImageBackground source={bgImage} style={styles.imageBg}>
@@ -53,7 +48,7 @@ export default function Detail({route}) {
                 </View>
             </ImageBackground>
             <ScrollView style={[styles.containerBody]}>
-                <SpeciesDetails speciesUrl={speciesUrl} />
+                <SpeciesDetails speciesUrl={speciesUrl} pokemonData={pokemonData} color={color} />
             </ScrollView>
         </View>
     );
@@ -73,7 +68,7 @@ const styles = StyleSheet.create({
         height: 150,
         position: 'absolute',
         bottom: -60,
-        zIndex: 1,
+        zIndex: 10,
         alignSelf: 'center',
     },
     text: {

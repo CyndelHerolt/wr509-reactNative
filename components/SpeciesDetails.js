@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {View, Text, FlatList, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
 import styleSheet from "react-native-web/src/exports/StyleSheet";
 
-export default function SpeciesDetails({ speciesUrl }) {
+export default function SpeciesDetails({ speciesUrl, pokemonData, color }) {
   const [speciesData, setSpeciesData] = useState(null);
 
   console.log(speciesData);
@@ -18,6 +18,20 @@ export default function SpeciesDetails({ speciesUrl }) {
   }
 
     const firstEntry = speciesData.flavor_text_entries[0];
+
+    console.log(pokemonData.sprites);
+
+    const sprites = Object.entries(pokemonData.sprites)
+        .reduce((acc, [key, value]) => {
+            if (typeof value === 'string') {
+                if (key.includes('shiny')) {
+                    acc.shiny.push({key, value});
+                } else if (key.includes('default')) {
+                    acc.default.push({key, value});
+                }
+            }
+            return acc;
+        }, {default: [], shiny: []});
 
     const dataItems = [
         { key: 'Color', value: speciesData.color.name },
@@ -40,6 +54,21 @@ export default function SpeciesDetails({ speciesUrl }) {
                 <View style={styles.dataItem} key={index}>
                     <Text style={styles.dataListKey}>{item.key}</Text>
                     <Text style={styles.dataListValue}>{item.value}</Text>
+                </View>
+            ))}
+        </View>
+
+        <View style={styles.spritesContainer}>
+            {sprites.default.map((sprite, index) => (
+                <View key={index} style={[styles.spritecontainer, {backgroundColor: color}]}>
+                    <Text>{sprite.key}</Text>
+                    <Image style={styles.sprite} source={{uri: sprite.value}} />
+                </View>
+            ))}
+            {sprites.shiny.map((sprite, index) => (
+                <View key={index} style={[styles.spritecontainer, {backgroundColor: color}]}>
+                    <Text>{sprite.key}</Text>
+                    <Image style={styles.sprite} source={{uri: sprite.value}} />
                 </View>
             ))}
         </View>
@@ -78,5 +107,25 @@ const styles = StyleSheet.create({
         backgroundColor: '#f3f3f3',
         padding: 10,
         borderRadius: 10,
+    },
+    spritesContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+    },
+    spritecontainer: {
+        alignItems: 'center',
+        margin: 15,
+        borderWidth: .3,
+        borderColor: '#b9b9b9',
+        padding: 5,
+        borderRadius: 10,
+    },
+    sprite: {
+        width: 100,
+        height: 100,
+        margin: 5,
+        borderRadius: 10,
+        backgroundColor: '#fff',
     },
 });

@@ -31,7 +31,7 @@ function HomeStack() {
 function MyTabs() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="HomeTab" component={HomeStack} />
+      <Tab.Screen name="Pokedex" component={HomeStack} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
