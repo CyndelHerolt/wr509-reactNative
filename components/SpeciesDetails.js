@@ -1,23 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
-import styleSheet from "react-native-web/src/exports/StyleSheet";
 
-export default function SpeciesDetails({ speciesUrl, pokemonData, color }) {
-  const [speciesData, setSpeciesData] = useState(null);
+export default function SpeciesDetails({speciesUrl, pokemonData, color}) {
+    const [speciesData, setSpeciesData] = useState(null);
 
-  console.log(speciesData);
+    console.log(speciesData);
 
-  useEffect(() => {
-    fetch(speciesUrl)
-      .then(response => response.json())
-      .then(data => setSpeciesData(data));
-  }, [speciesUrl]);
+    useEffect(() => {
+        fetch(speciesUrl)
+            .then(response => response.json())
+            .then(data => setSpeciesData(data));
+    }, [speciesUrl]);
 
-  if (!speciesData) {
-    return null; // todo: afficher un loader
-  }
+    if (!speciesData) {
+        return null; // todo: afficher un loader
+    }
 
-    const firstEntry = speciesData.flavor_text_entries[0];
+    const firstEntry = speciesData.flavor_text_entries.find(entry => entry.language.name === 'en');
 
     console.log(pokemonData.sprites);
 
@@ -34,46 +33,49 @@ export default function SpeciesDetails({ speciesUrl, pokemonData, color }) {
         }, {default: [], shiny: []});
 
     const dataItems = [
-        { key: 'Color', value: speciesData.color.name },
-        { key: 'Habitat', value: speciesData.habitat.name },
-        { key: 'Generation', value: speciesData.generation.name },
-        { key: 'Shape', value: speciesData.shape.name },
-        { key: 'Capture rate', value: speciesData.capture_rate },
-        { key: 'Base happiness', value: speciesData.base_happiness },
-        { key: 'Growth rate', value: speciesData.growth_rate.name },
-        { key: 'Egg groups', value: speciesData.egg_groups.map(eggGroup => eggGroup.name).join(', ') },
-        { key: 'Evolves from', value: speciesData.evolves_from_species ? speciesData.evolves_from_species.name : 'none' },
-        { key: 'Hatch counter', value: speciesData.hatch_counter },
+        {key: 'Color', value: speciesData.color ? speciesData.color.name : '???'},
+        {key: 'Habitat', value: speciesData.habitat ? speciesData.habitat.name : '???'},
+        {key: 'Generation', value: speciesData.generation ? speciesData.generation.name : '???'},
+        {key: 'Shape', value: speciesData.shape ? speciesData.shape.name : '???'},
+        {key: 'Capture rate', value: speciesData.capture_rate || '???'},
+        {key: 'Base happiness', value: speciesData.base_happiness || '???'},
+        {key: 'Growth rate', value: speciesData.growth_rate ? speciesData.growth_rate.name : '???'},
+        {
+            key: 'Egg groups',
+            value: speciesData.egg_groups.length > 0 ? speciesData.egg_groups.map(eggGroup => eggGroup.name).join(', ') : '???'
+        },
+        {key: 'Evolves from', value: speciesData.evolves_from_species ? speciesData.evolves_from_species.name : '???'},
+        {key: 'Hatch counter', value: speciesData.hatch_counter || '???'},
     ];
 
     return (
-    <ScrollView style={[styles.dataContainer]}>
-        <Text style={styles.description}>{firstEntry.flavor_text.replace(/\n/g, ' ')}</Text>
-        <View style={[styles.dataList]}>
-            {dataItems.map((item, index) => (
-                <View style={styles.dataItem} key={index}>
-                    <Text style={styles.dataListKey}>{item.key}</Text>
-                    <Text style={styles.dataListValue}>{item.value}</Text>
-                </View>
-            ))}
-        </View>
+        <ScrollView style={[styles.dataContainer]}>
+            <Text style={styles.description}>{firstEntry.flavor_text.replace(/\n/g, ' ')}</Text>
+            <View style={[styles.dataList]}>
+                {dataItems.map((item, index) => (
+                    <View style={styles.dataItem} key={index}>
+                        <Text style={styles.dataListKey}>{item.key}</Text>
+                        <Text style={styles.dataListValue}>{item.value}</Text>
+                    </View>
+                ))}
+            </View>
 
-        <View style={styles.spritesContainer}>
-            {sprites.default.map((sprite, index) => (
-                <View key={index} style={[styles.spritecontainer, {backgroundColor: color}]}>
-                    <Text>{sprite.key}</Text>
-                    <Image style={styles.sprite} source={{uri: sprite.value}} />
-                </View>
-            ))}
-            {sprites.shiny.map((sprite, index) => (
-                <View key={index} style={[styles.spritecontainer, {backgroundColor: color}]}>
-                    <Text>{sprite.key}</Text>
-                    <Image style={styles.sprite} source={{uri: sprite.value}} />
-                </View>
-            ))}
-        </View>
-    </ScrollView>
-  );
+            <View style={styles.spritesContainer}>
+                {sprites.default.map((sprite, index) => (
+                    <View key={index} style={[styles.spritecontainer, {backgroundColor: color}]}>
+                        <Text>{sprite.key}</Text>
+                        <Image style={styles.sprite} source={{uri: sprite.value}}/>
+                    </View>
+                ))}
+                {sprites.shiny.map((sprite, index) => (
+                    <View key={index} style={[styles.spritecontainer, {backgroundColor: color}]}>
+                        <Text>{sprite.key}</Text>
+                        <Image style={styles.sprite} source={{uri: sprite.value}}/>
+                    </View>
+                ))}
+            </View>
+        </ScrollView>
+    );
 }
 
 const styles = StyleSheet.create({

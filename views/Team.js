@@ -1,30 +1,26 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {View, Text, Button, ScrollView, StyleSheet} from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import TeamPokemon from "../components/TeamPokemon";
-import TilePokemon from "../components/TilePokemon";
+import {PokemonTeamContext} from '../context/PokemonTeamContext';
 
 export default function Team() {
-    const [favoritePokemons, setFavoritePokemons] = useState([]);
+    // const [teamPokemons, setTeamPokemons] = useState([]);
+    const {teamPokemons} = useContext(PokemonTeamContext);
     const [isManagingTeam, setIsManagingTeam] = useState(false);
-
-    useEffect(() => {
-        const fetchFavoritePokemons = async () => {
-            let pokemons = await AsyncStorage.getItem('favoritePokemons');
-            pokemons = pokemons == null ? [] : JSON.parse(pokemons);
-            setFavoritePokemons(pokemons);
-        };
-
-        fetchFavoritePokemons();
-    }, []);
 
     return (
         <View>
-            <Button title="Manage Team" onPress={() => setIsManagingTeam(!isManagingTeam)} />
-            <ScrollView contentContainerStyle={{flexDirection: 'row', flexWrap: 'wrap', justifyContent:'center', paddingBottom: 70, paddingTop:40}}>
-                {favoritePokemons.map((pokemon, index) => (
+            <Button title="Manage Team" onPress={() => setIsManagingTeam(!isManagingTeam)}/>
+            <ScrollView contentContainerStyle={styles.team}>
+                {teamPokemons.map((pokemon, index) => (
                     <View key={index}>
-                        <TeamPokemon key={index} pokemon={pokemon} isManagingTeam={isManagingTeam}/>
+                        <TeamPokemon
+                            key={index}
+                            pokemon={pokemon}
+                            color={pokemon.color}
+                            image={pokemon.image}
+                            isManagingTeam={isManagingTeam}
+                        />
                     </View>
                 ))}
             </ScrollView>
@@ -33,4 +29,9 @@ export default function Team() {
 }
 
 const styles = StyleSheet.create({
+    team: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        paddingBottom: 50,
+    },
 });

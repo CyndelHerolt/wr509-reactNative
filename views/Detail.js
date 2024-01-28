@@ -1,36 +1,32 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, Image, StyleSheet, ImageBackground, TouchableOpacity, ScrollView} from 'react-native';
+import React, {useEffect, useState, useContext} from 'react';
+import {View, Text, Image, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, Alert} from 'react-native';
 import baseImage from "../assets/pokeball.png";
 import bgImage from "../assets/pokeballBg.png";
 import SpeciesDetails from '../components/SpeciesDetails';
 import tinycolor from "tinycolor2";
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import addToTeam from '../methods/addToTeam';
-import deleteFromTeam from '../methods/deleteFromTeam';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PokemonTeamContext } from '../context/PokemonTeamContext';
 
 export default function Detail({route}) {
     const {pokemonData, image, color} = route.params;
     const colorType = tinycolor(color).darken(10).toString();
     const navigation = useNavigation();
+    const { teamPokemons, addPokemonToTeam, removePokemonFromTeam } = useContext(PokemonTeamContext);
 
     const species = pokemonData.species.name;
     const speciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${species}`;
 
-    const [isFavorite, setIsFavorite] = useState(false);
+    const [isTeam, setIsTeam] = useState(false);
 
     useEffect(() => {
-        const checkFavoriteStatus = async () => {
-            let favoritePokemons = await AsyncStorage.getItem('favoritePokemons');
-            favoritePokemons = favoritePokemons == null ? [] : JSON.parse(favoritePokemons);
-
-            const isFav = favoritePokemons.some(pokemon => pokemon.id === pokemonData.id);
-            setIsFavorite(isFav);
+        const checkTeamStatus = () => {
+            const isFav = teamPokemons.some(pokemon => pokemon.id === pokemonData.id);
+            setIsTeam(isFav);
         };
 
-        checkFavoriteStatus();
-    }, []);
+        checkTeamStatus();
+    }, [teamPokemons]);
 
     return (
         <View style={{flex: 1, backgroundColor: color}}>
@@ -42,16 +38,33 @@ export default function Detail({route}) {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={[styles.btn, {backgroundColor: colorType}]}
-                                      onPress={() => {
-                                          if (isFavorite) {
-                                              deleteFromTeam(pokemonData.id);
-                                              setIsFavorite(false);
+                                      onPress={async () => {
+                                          if (isTeam) {
+                                              await removePokemonFromTeam(pokemonData);
+                                              setIsTeam(false);
                                           } else {
-                                              addToTeam(pokemonData, image, color);
-                                              setIsFavorite(true);
+                                              if (teamPokemons.length >= 6) {
+                                                  Alert.alert(
+                                                      "Team Full",
+                                                      "Your team is already full. Please manage your team before adding more Pokemon.",
+                                                      [
+                                                          {
+                                                              text: "OK",
+                                                              onPress: () => navigation.navigate('Team')
+                                                          }
+                                                      ]
+                                                  );
+                                              } else {
+                                                  await addPokemonToTeam({
+                                                      ...pokemonData,
+                                                      color: color,
+                                                      image: image
+                                                  });
+                                                  setIsTeam(true);
+                                              }
                                           }
                                       }}>
-                        <Icon name={isFavorite ? "heart" : "heart-outline"} size={20} color="#fff"/>
+                        <Icon name={isTeam ? "heart" : "heart-outline"} size={20} color="#fff"/>
                     </TouchableOpacity>
                 </View>
                 <View style={[styles.containerHeader]}>
