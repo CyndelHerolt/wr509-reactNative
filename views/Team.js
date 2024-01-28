@@ -11,13 +11,7 @@ export default function Team() {
     return (
         <View>
             <Button title="Manage Team" onPress={() => setIsManagingTeam(!isManagingTeam)}/>
-            <ScrollView contentContainerStyle={{
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                paddingBottom: 70,
-                paddingTop: 40
-            }}>
+            <ScrollView contentContainerStyle={styles.team}>
                 {teamPokemons.map((pokemon, index) => (
                     <View key={index}>
                         <TeamPokemon
@@ -33,3 +27,11 @@ export default function Team() {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    team: {
+        flexDirection: 'column',
+        justifyContent: 'center',
+        paddingBottom: 50,
+    },
+});

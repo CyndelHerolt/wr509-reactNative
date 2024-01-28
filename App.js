@@ -64,20 +64,12 @@ export default function App() {
     const [data, setData] = useState([]);
     const [allPokemons, setAllPokemons] = useState([]);
 
-    // useEffect(() => {
-    //   getPokemons().then(pokemons => setData(pokemons));
-    // }, []);
-
     useEffect(() => {
         loadAllPokemons().then(pokemons => {
             setData(pokemons.slice(0, 20));
             setAllPokemons(pokemons);
         });
     }, []);
-
-    // const loadMorePokemons = () => {
-    //     getPokemons(data.length).then(morePokemons => setData([...data, ...morePokemons]));
-    // };
 
     const loadMorePokemons = () => {
         if (data.length < allPokemons.length) {

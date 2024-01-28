@@ -11,12 +11,12 @@ export default function TeamPokemon({ pokemon, color, image, isManagingTeam }) {
 
     return (
         <View style={[styles.CardTeam, {backgroundColor: color, borderColor: colorType}]}>
-            <ImageBackground source={bgImage} style={styles.imageBg}>
+            <ImageBackground source={bgImage} style={styles.cardContent}>
                 <Image source={{uri: image}} style={{width: 120, height: 120}} />
                 <Text style={styles.pokemonName}>{pokemon.name}</Text>
             </ImageBackground>
             {isManagingTeam && (
-                <View>
+                <View style={styles.buttons}>
                     <TouchableOpacity style={[styles.button, {backgroundColor: colorType}]} onPress={() => {
                         removePokemonFromTeam(pokemon);
                     }}>
@@ -46,9 +46,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         padding: 10,
         paddingTop: 0,
+        marginRight: 50,
+        fontSize: 20,
         fontWeight: 'bold',
         color: '#fff',
         textTransform: 'capitalize',
+    },
+    buttons: {
+        flexDirection: 'row',
     },
     button: {
         padding: 10,
@@ -58,5 +63,11 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         textAlign: 'center',
+    },
+    cardContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
     },
 });

@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {View, Text, Image, StyleSheet, ImageBackground, TouchableOpacity, ScrollView} from 'react-native';
+import {View, Text, Image, StyleSheet, ImageBackground, TouchableOpacity, ScrollView, Alert} from 'react-native';
 import baseImage from "../assets/pokeball.png";
 import bgImage from "../assets/pokeballBg.png";
 import SpeciesDetails from '../components/SpeciesDetails';
@@ -43,12 +43,25 @@ export default function Detail({route}) {
                                               await removePokemonFromTeam(pokemonData);
                                               setIsTeam(false);
                                           } else {
-                                              await addPokemonToTeam({
-                                                  ...pokemonData,
-                                                  color: color,
-                                                  image: image
-                                              });
-                                              setIsTeam(true);
+                                              if (teamPokemons.length >= 6) {
+                                                  Alert.alert(
+                                                      "Team Full",
+                                                      "Your team is already full. Please manage your team before adding more Pokemon.",
+                                                      [
+                                                          {
+                                                              text: "OK",
+                                                              onPress: () => navigation.navigate('Team')
+                                                          }
+                                                      ]
+                                                  );
+                                              } else {
+                                                  await addPokemonToTeam({
+                                                      ...pokemonData,
+                                                      color: color,
+                                                      image: image
+                                                  });
+                                                  setIsTeam(true);
+                                              }
                                           }
                                       }}>
                         <Icon name={isTeam ? "heart" : "heart-outline"} size={20} color="#fff"/>
