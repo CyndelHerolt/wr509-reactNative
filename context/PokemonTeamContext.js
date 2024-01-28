@@ -24,12 +24,36 @@ export const PokemonTeamProvider = ({ children }) => {
         setTeamPokemons(newTeamPokemons);
     };
 
+    const movePokemonUp = (pokemon) => {
+        setTeamPokemons(prevPokemons => {
+            const index = prevPokemons.findIndex(p => p.id === pokemon.id);
+            if (index > 0) {
+                const newPokemons = [...prevPokemons];
+                [newPokemons[index - 1], newPokemons[index]] = [newPokemons[index], newPokemons[index - 1]];
+                return newPokemons;
+            }
+            return prevPokemons;
+        });
+    };
+
+    const movePokemonDown = (pokemon) => {
+        setTeamPokemons(prevPokemons => {
+            const index = prevPokemons.findIndex(p => p.id === pokemon.id);
+            if (index < prevPokemons.length - 1) {
+                const newPokemons = [...prevPokemons];
+                [newPokemons[index], newPokemons[index + 1]] = [newPokemons[index + 1], newPokemons[index]];
+                return newPokemons;
+            }
+            return prevPokemons;
+        });
+    };
+
     useEffect(() => {
         fetchTeamPokemons();
     }, []);
 
     return (
-        <PokemonTeamContext.Provider value={{ teamPokemons, addPokemonToTeam, removePokemonFromTeam }}>
+        <PokemonTeamContext.Provider value={{ teamPokemons, addPokemonToTeam, removePokemonFromTeam, movePokemonUp, movePokemonDown }}>
             {children}
         </PokemonTeamContext.Provider>
     );

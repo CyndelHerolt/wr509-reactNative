@@ -6,7 +6,7 @@ import {ImageBackground} from "react-native";
 import {PokemonTeamContext} from "../context/PokemonTeamContext";
 
 export default function TeamPokemon({ pokemon, color, image, isManagingTeam }) {
-    const { removePokemonFromTeam } = useContext(PokemonTeamContext);
+    const { removePokemonFromTeam, movePokemonUp, movePokemonDown } = useContext(PokemonTeamContext);
     const colorType = tinycolor(color).darken(10).toString();
 
     return (
@@ -22,10 +22,14 @@ export default function TeamPokemon({ pokemon, color, image, isManagingTeam }) {
                     }}>
                         <Text style={styles.buttonText}>Remove</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, {backgroundColor: colorType}]} onPress={() => {/* TODO: move pokemon up in the team */}}>
+                    <TouchableOpacity style={[styles.button, {backgroundColor: colorType}]} onPress={() => {
+                        movePokemonUp(pokemon);
+                    }}>
                         <Text style={styles.buttonText}>Move Up</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, {backgroundColor: colorType}]} onPress={() => {/* TODO: move pokemon down in the team */}}>
+                    <TouchableOpacity style={[styles.button, {backgroundColor: colorType}]} onPress={() => {
+                        movePokemonDown(pokemon);
+                    }}>
                         <Text style={styles.buttonText}>Move Down</Text>
                     </TouchableOpacity>
                 </View>
