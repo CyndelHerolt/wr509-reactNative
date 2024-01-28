@@ -1,7 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from 'react-native';
-import {useEffect} from "react";
-import Detail from "../views/Detail";
 
 export default async function addToTeam(pokemonData, image, color) {
     try {
