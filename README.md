@@ -1,4 +1,4 @@
-# TP noté pour la ressource 'Application mobile' - BUT MMI S5.
+# TP noté pour la ressource 'Application mobile' - BUT MMI S5 | React Native
 
 ## Structure du rendu
 ### L’application doit être sur Git, avec un workflow cohérent :
