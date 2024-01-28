@@ -1,21 +1,25 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
 import tinycolor from "tinycolor2";
 import bgImage from "../assets/pokeballBg.png";
 import {ImageBackground} from "react-native";
+import {PokemonTeamContext} from "../context/PokemonTeamContext";
 
-export default function TeamPokemon({ pokemon, isManagingTeam }) {
-    const colorType = tinycolor(pokemon.color).darken(10).toString();
+export default function TeamPokemon({ pokemon, color, image, isManagingTeam }) {
+    const { removePokemonFromTeam } = useContext(PokemonTeamContext);
+    const colorType = tinycolor(color).darken(10).toString();
 
     return (
-        <View style={[styles.CardTeam, {backgroundColor: pokemon.color, borderColor: colorType}]}>
+        <View style={[styles.CardTeam, {backgroundColor: color, borderColor: colorType}]}>
             <ImageBackground source={bgImage} style={styles.imageBg}>
-                    <Image source={{uri: pokemon.image}} style={{width: 120, height: 120}} />
-                    <Text style={styles.pokemonName}>{pokemon.name}</Text>
+                <Image source={{uri: image}} style={{width: 120, height: 120}} />
+                <Text style={styles.pokemonName}>{pokemon.name}</Text>
             </ImageBackground>
             {isManagingTeam && (
                 <View>
-                    <TouchableOpacity style={[styles.button, {backgroundColor: colorType}]} onPress={() => {/* TODO: remove pokemon from team */}}>
+                    <TouchableOpacity style={[styles.button, {backgroundColor: colorType}]} onPress={() => {
+                        removePokemonFromTeam(pokemon);
+                    }}>
                         <Text style={styles.buttonText}>Remove</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.button, {backgroundColor: colorType}]} onPress={() => {/* TODO: move pokemon up in the team */}}>

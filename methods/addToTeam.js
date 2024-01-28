@@ -3,10 +3,10 @@ import { Alert } from 'react-native';
 
 export default async function addToTeam(pokemonData, image, color) {
     try {
-        let favoritePokemons = await AsyncStorage.getItem('favoritePokemons');
-        favoritePokemons = favoritePokemons == null ? [] : JSON.parse(favoritePokemons);
+        let teamPokemons = await AsyncStorage.getItem('teamPokemons');
+        teamPokemons = teamPokemons == null ? [] : JSON.parse(teamPokemons);
 
-        if (favoritePokemons.length >= 6) {
+        if (teamPokemons.length >= 6) {
             Alert.alert(
                 "Équipe complète",
                 "You can only have 6 pokemons in your team.",
@@ -24,9 +24,9 @@ export default async function addToTeam(pokemonData, image, color) {
             color: color
         };
 
-        favoritePokemons.push(newPokemon);
+        teamPokemons.push(newPokemon);
 
-        await AsyncStorage.setItem('favoritePokemons', JSON.stringify(favoritePokemons));
+        await AsyncStorage.setItem('teamPokemons', JSON.stringify(teamPokemons));
     } catch (e) {
         console.error(e);
     }

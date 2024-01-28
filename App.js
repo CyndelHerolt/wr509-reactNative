@@ -1,16 +1,16 @@
 import React, {useState, useEffect} from 'react';
-import getPokemons from './methods/getPokemons';
 import Home from './views/Home';
 import Detail from './views/Detail';
 import Team from './views/Team';
 import Settings from './views/Settings';
 import SearchScreen from './components/SearchScreen';
-import {View, Text, StyleSheet} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {PokemonContext} from './PokemonContext';
+import {PokemonContext} from './context/PokemonContext';
 import Icon from 'react-native-vector-icons/Ionicons';
+import loadAllPokemons from './methods/loadAllPokemons';
+import {PokemonTeamProvider} from './context/PokemonTeamContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,20 +62,37 @@ function MyTabs() {
 
 export default function App() {
     const [data, setData] = useState([]);
+    const [allPokemons, setAllPokemons] = useState([]);
+
+    // useEffect(() => {
+    //   getPokemons().then(pokemons => setData(pokemons));
+    // }, []);
 
     useEffect(() => {
-      getPokemons().then(pokemons => setData(pokemons));
+        loadAllPokemons().then(pokemons => {
+            setData(pokemons.slice(0, 20));
+            setAllPokemons(pokemons);
+        });
     }, []);
 
+    // const loadMorePokemons = () => {
+    //     getPokemons(data.length).then(morePokemons => setData([...data, ...morePokemons]));
+    // };
+
     const loadMorePokemons = () => {
-        getPokemons(data.length).then(morePokemons => setData([...data, ...morePokemons]));
+        if (data.length < allPokemons.length) {
+            const morePokemons = allPokemons.slice(data.length, data.length + 20);
+            setData([...data, ...morePokemons]);
+        }
     };
 
     return (
-        <PokemonContext.Provider value={{data, loadMorePokemons}}>
-            <NavigationContainer>
-                <MyTabs/>
-            </NavigationContainer>
+        <PokemonContext.Provider value={{data, allPokemons, loadMorePokemons}}>
+            <PokemonTeamProvider>
+                <NavigationContainer>
+                    <MyTabs/>
+                </NavigationContainer>
+            </PokemonTeamProvider>
         </PokemonContext.Provider>
     );
 }

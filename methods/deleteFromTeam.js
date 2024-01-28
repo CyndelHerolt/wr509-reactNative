@@ -2,12 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default async function deleteFromTeam(pokemonId) {
     try {
-        let favoritePokemons = await AsyncStorage.getItem('favoritePokemons');
-        favoritePokemons = favoritePokemons == null ? [] : JSON.parse(favoritePokemons);
+        let teamPokemons = await AsyncStorage.getItem('teamPokemons');
+        teamPokemons = teamPokemons == null ? [] : JSON.parse(teamPokemons);
 
-        const newFavoritePokemons = favoritePokemons.filter(pokemon => pokemon.id !== pokemonId);
+        const newTeamPokemons = teamPokemons.filter(pokemon => pokemon.id !== pokemonId);
 
-        await AsyncStorage.setItem('favoritePokemons', JSON.stringify(newFavoritePokemons));
+        await AsyncStorage.setItem('teamPokemons', JSON.stringify(newTeamPokemons));
     } catch (e) {
         console.error(e);
     }
